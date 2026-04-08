@@ -12,7 +12,7 @@ export const getShortenerPage = async (req, res) => {
     const file = await readFile(path.join("public", "index1.html"));
      const links = await loadLinks();
     
-    console.log("links", links);
+    //console.log("links", links);
     const content = file.toString().replaceAll(
       "{{shortened_urls}}",
       links
