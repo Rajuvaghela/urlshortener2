@@ -1,0 +1,15 @@
+body{
+    background-color: #e2e2e2;
+}
+
+.container{
+    width: 600px;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h1{
+    text-align: center;
+}
