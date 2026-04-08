@@ -15,8 +15,10 @@ const userSchema = mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   age: { type: Number, required: true, min: 5 },
-  createdAt: { type: Date, default: Date.now() },
-  updatedAt: { type: Date, default: Date.now() },
+//   createdAt: { type: Date, default: Date.now() },
+//   updatedAt: { type: Date, default: Date.now() },
+},{
+    timestamps:true
 });
 
 userSchema.pre(
@@ -34,6 +36,6 @@ const Users = mongoose.model("user", userSchema);
 // await Users.create({ name: "Amit", age: 30, email: "amit@gmail.com" });
 // await Users.create({ name: "Laxmi", age: 26, email: "laxmi@gmail.com" });
 
-await Users.updateOne({ name: "Raju" }, { $set: { age: 31 } });
+await Users.updateOne({ name: "Raju" }, { $set: { age: 30 } });
 
 process.exit();
