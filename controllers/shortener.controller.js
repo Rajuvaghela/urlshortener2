@@ -9,38 +9,19 @@ import {
 
 export const getShortenerPage = async (req, res) => {
   try {
-    const file = await readFile(path.join("public", "index1.html"));
-     const links = await loadLinks();
-    
-    //console.log("links", links);
-    const content = file.toString().replaceAll(
-      "{{shortened_urls}}",
-      links
-        .map((item) => {
-          const { shortCode, url } = item;
+    const links = await loadLinks();
 
-          const shortUrl = url.length > 30 ? `${url.slice(0, 30)}...` : url;
-
-          return `
-        <li>
-          <a href="/${shortCode}" target="_blank">
-            ${req.headers.host}/${shortCode}
-          </a>
-          - ${shortUrl}
-        </li>
-      `;
-        })
-        .join(""),
-    );
-
-    return res.send(content);
+    return res.render("index", {
+      links,
+      host: req.host,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send("Internal server error");
   }
 };
 
-export const postUrlShortener = async (req, res) => {
+export const postShortenLink = async (req, res) => {
   try {
     const { url, shortCode } = req.body;
 
@@ -51,12 +32,15 @@ export const postUrlShortener = async (req, res) => {
 
     const finalShortCode = shortCode || crypto.randomBytes(4).toString("hex");
 
-    const links = await loadLinks();
+    //const links = await loadLinks();
+    const link = await getLinkByShortCode(finalShortCode);
 
-    if (links[finalShortCode]) {
+    if (link) {
       return res
         .status(400)
-        .send("Short code already exists. Please choose another");
+        .send(
+          `<h1>URL with that shortcode already exists,please choose another <a href="/">Go Back</a> </h1>`,
+        );
     }
 
     // Save link
@@ -64,7 +48,7 @@ export const postUrlShortener = async (req, res) => {
 
     // await saveLinks(links);
 
-    await saveLinks({ url, shortCode });
+    await saveLinks({ url, shortCode:finalShortCode });
 
     return res.redirect("/");
   } catch (error) {
